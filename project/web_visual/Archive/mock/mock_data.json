@@ -1,0 +1,341 @@
+{
+    "sidebarData": {
+        "dashboard": {
+            "link": "http://localhost:8081/db",
+            "title": "仪表盘",
+            "id": 1
+        },
+        "header": {
+            "link": "http://localhost:8081/db",
+            "title": "vHPC",
+            "id": 2
+        },
+        "treeitems": {
+            "系统部署": {
+                "link": "http://localhost:3000/db",
+                "title": "系统部署",
+                "id": 3,
+                "secondmenus": {
+                    "配置与定义": {
+                        "link": "http://nordata.com.cn",
+                        "title": "配置与定义",
+                        "id": 5,
+                        "thirdmenus": {
+                            "Distros": {
+                                "link": "http://baidu.com",
+                                "title": "Distros",
+                                "id": 6
+                            },
+                            "Profiles": {
+                                "link": "http://baidu.com",
+                                "title": "Profiless",
+                                "id": 7
+                            },
+                            "操作系统": {
+                                "link": "http://baidu.com",
+                                "title": "操作系统",
+                                "id": 8
+                            },
+                            "软件仓库": {
+                                "link": "http://baidu.com",
+                                "title": "软件仓库",
+                                "id": 9
+                            },
+                            "系统镜像": {
+                                "link": "http://baidu.com",
+                                "title": "系统镜像",
+                                "id": 10
+                            },
+                            "自动安装模板": {
+                                "link": "http://baidu.com",
+                                "title": "自动安装模板",
+                                "id": 11
+                            }
+                        }
+                    }
+                }
+            },
+            "软件/服务部署": {
+                "link": "http://localhost:3000/db",
+                "title": "软件/服务部署",
+                "id": 12,
+                "secondmenus": {
+                    "软件安装": {
+                        "link": "http://nordata.com.cn",
+                        "title": "软件安装",
+                        "id": 13
+                    },
+                    "服务部署": {
+                        "link": "http://nordata.com.cn",
+                        "title": "服务部署",
+                        "id": 14             
+                    }
+                }
+            },
+            "系统与网络监": {
+                "link": "http://localhost:3000/db",
+                "title": "系统与网络监控",
+                "id": 15,
+                "secondmenus": {
+                    "系统服务": {
+                        "link": "http://nordata.com.cn",
+                        "title": "系统服务",
+                        "id": 16
+                    },
+                    "网络监控": {
+                        "link": "http://nordata.com.cn",
+                        "title": "网络监控",
+                        "id": 17,
+                        "thirdmenus": {
+                            "交换机": {
+                                "link": "http://baidu.com",
+                                "title": "交换机",
+                                "id": 18
+                            },
+                            "路由器": {
+                                "link": "http://baidu.com",
+                                "title": "路由器",
+                                "id": 19
+                            },
+                            "IB交换机": {
+                                "link": "http://baidu.com",
+                                "title": "IB交换机",
+                                "id": 20
+                            }
+                        }
+                    }
+                }
+            },
+            "节点监控": {
+                "link": "http://localhost:3000/db",
+                "title": "节点监控",
+                "id": 21,
+                "secondmenus": {
+                    "开关机": {
+                        "link": "http://nordata.com.cn",
+                        "title": "开关机",
+                        "id": 22
+                    },
+                    "硬件监控": {
+                        "link": "http://nordata.com.cn",
+                        "title": "硬件监控",
+                        "id": 23
+                    }
+                }
+            },
+            "使用指南": {
+                "link": "http://localhost:3000/db",
+                "title": "使用指南",
+                "id": 24
+            },
+            "错误": {
+                "link": "http://localhost:3000/db",
+                "title": "错误",
+                "id": 25
+            },
+            "警告": {
+                "link": "http://localhost:3000/db",
+                "title": "警告",
+                "id": 26
+            },
+            "信息": {
+                "link": "http://localhost:3000/db",
+                "title": "信息",
+                "id": 27
+            }
+        }
+    },
+    "pictureData": {
+        "sectionnums": 2,
+        "sections": {
+            "section1": {
+                "title": "测试块1",
+                "pic1": {
+                    "title": "测试图1",
+                    "imglink": "http://img.blog.csdn.net/20150805231312369",
+                    "href": "http://www.baidu.com"
+                },
+                "pic2": {
+                    "title": "测试图2",
+                    "imglink": "http://img.shujuren.org/pictures/FO/57138e83d3792.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic3": {
+                    "title": "测试图3",
+                    "imglink": "https://i.stack.imgur.com/KRXyD.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic4": {
+                    "title": "测试图4",
+                    "imglink": "https://i.stack.imgur.com/EjCfb.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic5": {
+                    "title": "测试图5",
+                    "imglink": "http://cassiusoat.qiniudn.com/ggplot2_60.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic6": {
+                    "title": "测试图6",
+                    "imglink": "http://cassiusoat.qiniudn.com/ggplot2_61USA_POP.png",
+                    "href": "http://www.baidu.com"
+                }
+            },
+            "section2": {
+                "title": "测试块2",
+                "pic1": {
+                    "title": "测试图1",
+                    "imglink": "http://cassiusoat.qiniudn.com/ggplot2_62dose-response.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic2": {
+                    "title": "测试图2",
+                    "imglink": "http://cassiusoat.qiniudn.com/ggplot2_27.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic3": {
+                    "title": "测试图3",
+                    "imglink": "https://i.stack.imgur.com/t3pO3.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic4": {
+                    "title": "测试图4",
+                    "imglink": "https://imgtn.gxnotes.com/images/2017/06/1b274aec7367829ed3cfc834d35a540c.jpg",
+                    "href": "http://www.baidu.com"
+                },
+                "pic5": {
+                    "title": "测试图5",
+                    "imglink": "http://www.ppvke.com/Blog/wp-content/uploads/2016/05/44-3.png",
+                    "href": "http://www.baidu.com"
+                },
+                "pic6": {
+                    "title": "测试图6",
+                    "imglink": "http://img.blog.csdn.net/20150430031114036",
+                    "href": "http://www.baidu.com"
+                }
+            }
+        }
+    },
+    "tables": {
+        "total": 8,
+        "per_page": 4,
+        "current_page": 1,
+        "last_page": 2,
+        "next_page_url": null,
+        "prev_page_url": null,
+        "from": 1,
+        "to": 4,
+        "data": [
+            {
+                "id": 1,
+                "hostname": "management_node_15",
+                "ipaddr": "192.192.192.15",
+                "ipmi_ipaddr": "172.172.172.15",
+                "ib_ipaddr": "10.10.10.15",
+                "group_name": "management",
+                "hostuuid": "agedg423535",
+                "powerstatus": "POWER_ON"
+            },
+            {
+                "id": 2,
+                "hostname": "compute_node_1",
+                "ipaddr": "192.192.192.1",
+                "ipmi_ipaddr": "172.172.172.1",
+                "ib_ipaddr": "10.10.10.1",
+                "group_name": "compute",
+                "hostuuid": "fder34545",
+                "powerstatus": "REBOOT"
+            },
+            {
+                "id": 3,
+                "hostname": "compute_node_2",
+                "ipaddr": "192.192.192.2",
+                "ipmi_ipaddr": "172.172.172.2",
+                "ib_ipaddr": "10.10.10.2",
+                "group_name": "compute",
+                "hostuuid": "fder34548",
+                "powerstatus": "POWER_OFF"
+            },
+            {
+                "id": 4,
+                "hostname": "compute_node_3",
+                "ipaddr": "192.192.192.3",
+                "ipmi_ipaddr": "172.172.172.3",
+                "ib_ipaddr": "10.10.10.3",
+                "group_name": "compute",
+                "hostuuid": "fder34549",
+                "powerstatus": "POWER_O"
+            }
+        ]
+    },
+    "tables?filter='abc'": {
+        "total": 8,
+        "per_page": 4,
+        "current_page": 1,
+        "last_page": 2,
+        "next_page_url": null,
+        "prev_page_url": null,
+        "from": 1,
+        "to": 4,
+        "data": [
+            {
+                "id": 1,
+                "hostname": "management_node_15",
+                "ipaddr": "192.192.192.15",
+                "ipmi_ipaddr": "172.172.172.15",
+                "ib_ipaddr": "10.10.10.15",
+                "group_name": "management",
+                "hostuuid": "agedg423535",
+                "powerstatus": "POWER_OFF"
+            },
+            {
+                "id": 2,
+                "hostname": "compute_node_1",
+                "ipaddr": "192.192.192.1",
+                "ipmi_ipaddr": "172.172.172.1",
+                "ib_ipaddr": "10.10.10.1",
+                "group_name": "compute",
+                "hostuuid": "fder34545",
+                "powerstatus": "POWER_O"
+            }
+        ]
+    },
+    "tabs": {
+        "tabsData": {
+            "CPUs": {
+                "active": "true",
+                "name": "cpu_info",
+                "title": "CPU信息",
+                "content": "<ul><li>this is a first tab.</li><li>This is a test.</li></ul>"
+            },
+            "Memory": {
+                "active": "false",
+                "name": "memory_info",
+                "title": "内存信息",
+                "content": "<div class='tab-content'><div role='tabpanel' class='tab-pane' id='t1'>Hello World</div><div role='tabpanel' class='tab-pane' id='t2'><table class='table'><thead><tr><th>Firstname</th><th>Lastname</th><th>Email</th></tr></thead><tbody><tr><td>John</td><td>Doe</td><td>john@example.com</td></tr><tr><td>Mary</td><td>Moe</td><td>mary@example.com</td></tr><tr><td>July</td><td>Dooley</td><td>july@example.com</td></tr></tbody></table></div><div role='tabpanel' class='tab-pane active' id='t3'><form role='form'><div class='form-group'><label for='email'>Email:</label><input type='email' class='form-control' id='email' placeholder='Enter email'></div><div class='form-group'><label for='pwd'>Password:</label><input type='password' class='form-control' id='pwd' placeholder='Enter password'></div><div class='checkbox'><label><input type='checkbox'> Remember me</label></div><button type='submit' class='btn btn-default'>Submit</button></form></div></div>"
+            },
+            "Storage": {
+                "active": "false",
+                "name": "storage_info",
+                "title": "存储信息",
+                "content": "this is a third tab."
+            },
+            "Network": {
+                "active": "false",
+                "name": "network_info",
+                "title": "网络信息",
+                "content": "this is a fouth tab."
+            }
+        }
+    },
+    "test": [
+        {
+            "id": 1,
+            "name": "yjc"
+        },
+        {
+            "id": 2,
+            "name": "FK"
+        }
+    ]
+}

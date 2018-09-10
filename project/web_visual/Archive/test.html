@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"> 
+    <title>Bootstrap 实例 - 面板标题</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .msg-danger {
+            background-color: #d9534f!important;
+            color: #fff;
+        }
+
+        .msg-warning {
+            background-color: #f0ad4e!important;
+            color: #fff;
+        }
+
+        .msg-info {
+            background-color: #337ab7!important;
+            color: #fff;
+        }
+        .badge-danger {
+            background-color: #fff!important;
+            color: #000!important;           
+        }
+        .badge-warning {
+            background-color: #fff!important;
+            color: #000!important; 
+        }
+        .badge-info {
+            background-color: #fff!important;
+            color: #000!important;
+        }
+        .container {
+            margin-top: 10px;
+            width: 80%;
+        }
+        .panel {
+            border: none;
+            background-color: inherit;
+        }
+
+        .panel-heading {
+            border-radius: 5px;
+            background-color: #ddd!important;
+        }
+        .panel-body {
+            margin-top: 10px;
+            border: solid 1px #ddd;
+            border-radius: 5px;
+            background-color: #ddd;
+        }
+        .panel-body > .row {
+            width: 99.99%;
+            margin-left: -10px;
+        }
+        .btn {
+            background-color: #fff;
+        }
+        .dropdown-toggle {
+            padding: 9px 12px!important;
+        }
+        .img-thumbnail {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        .close {
+            position: absolute;
+            right: -5px;
+            display: block;
+            line-height: initial;
+            opacity: 0.5;
+        }
+        .plus {
+            font-size: 60px;
+            width: 100%;
+            height: 200px;
+            border-radius: 5px;
+            border: solid 1px #ddd;
+        }
+        h4 {
+            text-align: center;
+        }
+        .placeholder {
+            margin: 10px 10px;
+            height: 19px;
+        }
+        .active {
+            display: block!important;
+        }
+        .form-container {
+            position: absolute;
+            background-color: #ddd;
+            top: 40%;
+            left: 20%;
+            width: 60%;
+            padding: 10px;
+            margin: auto auto;
+            border-radius: 5px;
+            border: solid 1px #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-10 col-sm-9 col-xs-8">
+                    <ul class="nav nav-pills">
+                        <li>
+                            <a href="#" class="msg-danger">错误
+                                <span class="badge badge-danger">42</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="msg-warning">警告
+                                <span class="badge badge-warning">42</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="msg-info">信息
+                                <span class="badge badge-info">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-4">
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">选择时间
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">当前</a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">一周</a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">一月</a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">三月</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="http://constey.de/wp-content/uploads/2013/06/esxi-nagios-cpu.png" class="img-thumbnail">
+                </div>
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="http://i.stack.imgur.com/jWNEh.png" class="img-thumbnail">
+                </div>
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="http://www.mfservis.cz/images/Nagios_graf_CPU.jpg" class="img-thumbnail">            
+                </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="https://www.ibm.com/developerworks/cn/linux/l-ganglia-nagios-1/figure3.jpg" class="img-thumbnail">
+                </div>
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="http://filesimg.111cn.net/2014/04/17/20140417124113307.png" class="img-thumbnail">
+                </div>
+                <div class="col-md-4">
+                    <h4>CPU负载</h4>
+                    <button type='button' class='close' data-dismiss='alert'><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <img src="http://tse2.mm.bing.net/th?id=OIP.HWWB8zLkO9PFPK-kL5Wi3gEsB_&pid=15.1" class="img-thumbnail">            
+                </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+                <div class="col-md-4">
+                    <div class="placeholder"></div>
+                    <button type='button' onclick="showForm()" class='plus' data-dismiss='alert'>+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-container">
+<form :action="apiUrl" method="POST" role="form" id="form">
+    <div class="form-group">
+        <label for="monitor-index">选择指标</label>
+        <select class="form-control" id="monitor-index">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+        <label for="visual-type">可视化类型</label>
+        <select class="form-control" id="visual-type">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="监控名称">
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox" name="perm-storage">是否保存为配置?</label>
+    </div>
+    <button type="submit" class="btn btn-default">提交</button>
+</form>
+</div>
+<script type="text/javascript">
+    function showForm() {
+        $('#form-container').css('display', 'block');
+    }
+</script>
+</body>
+</html>

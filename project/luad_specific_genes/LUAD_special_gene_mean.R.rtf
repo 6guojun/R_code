@@ -1,0 +1,104 @@
+{\rtf1\ansi\ansicpg936\cocoartf1504\cocoasubrtf810
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 library("ggplot2")\
+setwd("/Users/stead/Desktop/GDC/LUAD/ROC/tissue_special_gene")\
+\
+splite_data <- function(rt, k)\{\
+  keepRow <- c(1: nrow(rt))            \
+  keepCol <- seq(1, ncol(rt)) ## product the data of read per millions\
+  data <- rt[keepRow, keepCol]\
+  data <- log2(data + 0.001)\
+  dimnames <- list(rownames(data), colnames(data))\
+  data <- matrix(as.numeric(as.matrix(data)), nrow=nrow(data), dimnames = dimnames) \
+  \
+  G.R <- sapply(strsplit(colnames(data), "\\\\."), "[", 4 ) # "["(a, 4) almost a[4]\
+\
+  ### you can choose the output data base on k\
+  if(is.null(k)||k == "")\{ \
+    return(NULL)\
+    \} else \{\
+      data.index <- grep(k, G.R)\
+      data_out <- data[, data.index]\
+      return(data_out) \
+      \}\
+  \}\
+\
+\
+\
+merge_mean <- function(nam, k)\{\
+  rt <- read.table(file = paste(file = "/Users/stead/Desktop/GDC/", nam, "/raw_data/", nam, "_mRNA_FPKM.txt", sep = ""), header = T, na.strings = NA, row.names = 1, sep = "\\t")\
+  if(is.null(k)||k == "")\{ \
+    return(NULL)\
+  \} else \{\
+    data_out <- splite_data(rt, k)\
+    data_out_M <- data.frame(apply(data_out, 1, mean), stringsAsFactors = F) \
+    data_out_M <- cbind(row.names(data_out_M), data_out_M)\
+    return(data_out_M)\
+  \}\
+\}\
+\
+\
+a <- c("LUAD", "BRCA", "BLCA", "ACC", "CESC", "COAD", "ESCA", "GBM", "HNSC", "KIRC", "KIRP", "LIHC", "LUSC", "OV", "PAAD", "PCPG", "READ", "SARC", "SKCM",\
+"STAD", "TGCT", "THCA", "THYM", "UCEC", "LAML", "LGG")\
+#b <- c("LUAD", "BRCA", "COAD", "HNSC", "KIRC", "KIRP", "LIHC", "LUSC", "STAD", "THCA", "UCEC")\
+\
+rt_T_M <- lapply(a, merge_mean, "0..")\
+#rt_N_M <-  lapply(b, merge_mean, "1..")\
+\
+rt_T_M_M <- do.call("cbind", rt_T_M)\
+#rt_N_M_M <- do.call("cbind", rt_N_M)\
+\
+rt_M <- rt_T_M_M[, which(colnames(rt_T_M_M) == "apply.data_out..1..mean.")]\
+rt_M_name <- rt_T_M_M[, which(colnames(rt_T_M_M) == "row.names(data_out_M)")]\
+\
+#rt_M <- rt_N_M_M[, which(colnames(rt_N_M_M) == "apply.data_out..1..mean.")]\
+#rt_M_name <- rt_N_M_M[, which(colnames(rt_N_M_M) == "row.names(data_out_M)")]\
+\
+colnames(rt_M) <- a\
+#colnames(rt_M) <- b\
+#write.table(rt_M, file = "normal_mean_data.txt", row.names = T, col.names = T, sep = "\\t")\
+#rite.table(rt_M_name, file = "normal_mean_data_name.txt", row.names = T, col.names = T, sep = "\\t")\
+\
+rt_M_t <- data.frame(t(rt_M), stringsAsFactors = F)\
+#colnames(rt_M_t) <- c(rt_M_t[2, ])\
+#data <- data.frame(apply(rt_M_t[-c(1,2), ], 2, as.numeric), stringsAsFactors = F)\
+rt_M_C <- cbind(row.names(rt_M_t), rt_M_t)\
+colnames(rt_M_C)[1] <- "id"\
+\
+\
+draw_box <- function(data_out)\{\
+  filename <- colnames(data_out)[2]\
+  pdf(file = paste(filename, ".pdf", sep = ""))\
+  p = qplot(id, data_out[,2], data = data_out, geom = "boxplot") + \
+      theme(plot.title = element_text(size=100, face="bold", hjust = 0.5), \
+            axis.title.x = element_text(size = 7, color = "black", face = "bold", vjust = 0.5, hjust = 0.5, angle = 450),\
+            axis.text.x = element_text(size = 7, color = "black", face = "bold", vjust = 0.5, hjust = 0.5, angle = 450))\
+  print(p)\
+  dev.off()   \
+\} \
+\
+max_count <- function(x)\{\
+  filename <- colnames(rt_M_C)[x]\
+  t <- which(row.names(rt_M_C) == "LUAD")\
+  r <- which(row.names(rt_M_C) != "LUAD")\
+  k <- rt_M_C[r, x]\
+  \
+  if(as.character(rt_M_C[which.max(rt_M_C[, x]), 1]) == "LUAD" &&\
+    #all(rt_M_C[t, x]/(k + 0.0001) >= 2) == TRUE) \
+    all((rt_M_C[t, x] - k >= 1) == TRUE))\{\
+    data_out <- rt_M_C[, c(1, x)]\
+    write.table(data_out, file = paste(filename, ".tsv", sep = ""), col.names = T, row.names = T, sep = "\\t")\
+    draw_box(data_out)\
+  \}\
+\} \
+\
+\
+\
+b <- c(2 : length(colnames(rt_M_C)))\
+lapply(b, max_count) \
+}
