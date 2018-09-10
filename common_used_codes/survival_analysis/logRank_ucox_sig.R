@@ -1,8 +1,8 @@
 ###get univaiate analysis and LogRank gene
-source('/Users/stead/Documents/SourceTree/R/genomic_personalise_analysis/script/survival_analysis_2.R')
-LogRankUcoxSigGs <- function(mat_exp_sur, data_id, DatType= c('ConType', 'LogType')){
+LogRankUcoxSigGs <- function(mat_exp_sur, data_id, DatType= c('ConType', 'LogType'), script_dir){
   print('change the content of survival_analysis_2.R')
   print('mat_exp_sur contain OS_Time and OS_Status in the end of mat_exp_sur colnames')
+  source(paste(script_dir, 'survival_analysis/survival_analysis.R', sep = ""))
   unam <- colnames(mat_exp_sur)[1: (dim(mat_exp_sur)[2]-2)]
   uvm_list <- lapply(unam, uvm_count, mat_exp_sur)
   data_uvm <- do.call(rbind, uvm_list)
