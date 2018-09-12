@@ -1,3 +1,5 @@
+library(circlize)
+library(ComplexHeatmap)
 
 ComHeatSig <- function(mat_sur_score, risk_genes = risk_genes, risk_title = risk_title){
   

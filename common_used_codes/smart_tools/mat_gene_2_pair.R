@@ -1,8 +1,9 @@
 ###convet a matrix with expression  to matrix with gene pairs 
 
-source("/Users/stead/Documents/SourceTree/R/common_used_codes/tcga_tools/get_exp_sur_cli_merge_data.R")
-source("/Users/stead/Documents/SourceTree/R/common_used_codes/tcga_tools/get_tcga_sample_type.R")
-source('/Users/stead/Documents/SourceTree/R/common_used_codes/smart_tools/EA2SM.R')
+script_dir='/Users/stead/Documents/SourceTree/R/common_used_codes/'
+source(paste(script_dir, 'tcga_tools/get_exp_sur_cli_merge_data.R', sep = ""))
+source(paste(script_dir, 'tcga_tools/get_tcga_sample_type.R', sep = ""))
+source(paste(script_dir, 'smart_tools/EA2SM.R', sep = ""))
 
 
 ###convert expression matrix to gene pairs matrix which contain only 1 or 0
