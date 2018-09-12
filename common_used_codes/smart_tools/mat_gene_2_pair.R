@@ -37,9 +37,9 @@ PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = 
                    in_type = in_type, out_type = out_type, dup_type = dup_type) {
   ###TCGA dataset
   if(dataset_id == 'TCGA'){
-    rt_exp <- read.table(file = paste(data_dir, cancer_type, '/RNA_seq/TCGA-', cancer_type, '.htseq_fpkm.tsv', sep = ''), header = TRUE, 
+    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/RNA_seq/TCGA-', cancer_type, '.htseq_fpkm.tsv', sep = ''), header = TRUE, 
                          row.names = 1, sep = '\t', stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste(data_dir, cancer_type, "/phenotype/TCGA-", cancer_type, ".survival.tsv", sep = ""), header = TRUE,
+    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, "/phenotype/TCGA-", cancer_type, ".survival.tsv", sep = ""), header = TRUE,
                          sep = "\t", row.names = NULL, stringsAsFactors = FALSE)
     
     rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)  #conver ensemble id to gene name
@@ -63,9 +63,9 @@ PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = 
     
     ###GEO dataset###
   } else if (dataset_id == 'GEO') {
-    rt_exp <- read.table(file = paste(data_dir, cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
+    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
                          , sep = '\t', header = TRUE, row.names = 1, stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste(data_dir, cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
+    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
                          header = TRUE, sep = '\t', stringsAsFactors = FALSE)
     rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)   #conver ensemble id to gene name
     rt_exp_int <- rt_exp_sym[match(tar_genes, row.names(rt_exp_sym), nomatch = 0), ] #get target genes expression table
@@ -92,9 +92,9 @@ GetGS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c
                    in_type = in_type, out_type = out_type, dup_type = dup_type) {
   ###TCGA dataset
   if(dataset_id == 'TCGA'){
-    rt_exp <- read.table(file = paste(data_dir, cancer_type, '/RNA_seq/TCGA-', cancer_type, '.htseq_fpkm.tsv', sep = ''), header = TRUE, 
+    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/RNA_seq/TCGA-', cancer_type, '.htseq_fpkm.tsv', sep = ''), header = TRUE, 
                          row.names = 1, sep = '\t', stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste(data_dir, cancer_type, "/phenotype/TCGA-", cancer_type, ".survival.tsv", sep = ""), header = TRUE,
+    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, "/phenotype/TCGA-", cancer_type, ".survival.tsv", sep = ""), header = TRUE,
                          sep = "\t", row.names = NULL, stringsAsFactors = FALSE)
     
     rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)  #conver ensemble id to gene name
@@ -112,9 +112,9 @@ GetGS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c
     
     ###GEO dataset###
   } else if (dataset_id == 'GEO') {
-    rt_exp <- read.table(file = paste('/Users/stead/Desktop/PD-L1_and_TMI_type/GEO_data/LUAD/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
+    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
                          , sep = '\t', header = TRUE, row.names = 1, stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste('/Users/stead/Desktop/PD-L1_and_TMI_type/GEO_data/LUAD/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
+    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
                          header = TRUE, sep = '\t', stringsAsFactors = FALSE)
     rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)   #conver ensemble id to gene name
     rt_exp_int <- rt_exp_sym[match(tar_genes, row.names(rt_exp_sym), nomatch = 0), ] #get target genes expression table

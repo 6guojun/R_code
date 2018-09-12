@@ -12,7 +12,7 @@ library(survival)
 ################################################################
 
 
-DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), theme_surv, len_a = len_a, len_b = len_b, palette = palette){
+DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), theme_surv, len_a = len_a, len_b = len_b, palette = palette, risk.table = risk.table){
   # pM_List is a list contain the main element fit and survival analysis pValue
   # SurvType is High mean that the resutls of output is group of high expression with shorter survival time
   # SurvType is Low mean that the resutls of output is group of high expression with longer survival time
@@ -20,7 +20,8 @@ DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), th
   # Low and High just represent the survival rate of high expression group 
   print("your survival data title must be OS_Status and OS_Time")
   print("len_a < median")
-  
+  Gnam = Gnam
+  Rt_Exp_Cli = Rt_Exp_Cli 
   PreSurList <- function(Gnam, Rt_Exp_Cli){
     # Rt_Exp_Cli just contain three columns Time, Status and Gr
     # Ge will be produced by the function of MakSurList
@@ -74,7 +75,7 @@ DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), th
              pval = pval, conf.int = FALSE, pval.size = 10, pval.coord = c(1, 0), 
              xlab = "Time in days", 
              size = 2, #change line size
-             risk.table = TRUE, # Add risk table
+             risk.table = risk.table, # Add risk table
              palette = palette, # custom color palette
              risk.table.col = "strata", # Change risk table color by groups
              ggtheme = theme_surv, fontsize = 8, risk.table.height= 0.3)

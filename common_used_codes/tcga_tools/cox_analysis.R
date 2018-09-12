@@ -1,5 +1,5 @@
 library(survival)
-#library(BhGLM)
+library(BhGLM)
 library(glmnet)
 
 uvm_count <- function(unam, rt_uvm){
@@ -13,7 +13,8 @@ uvm_count <- function(unam, rt_uvm){
   tt <- summary(fc)
   uvm_out <- data.frame(cbind(tt$coefficients, tt$conf.int), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
   colnames(uvm_out) <- c("coef", "exp_coef", "lower_95%CI", "upper_95%CI", "pvalue")
-  row.names(uvm_out) <- unam
+  uvm_out <- data.frame(cbind(row.names(uvm_out), uvm_out))
+  colnames(mvm_out)[1] <- 'variable'
   return(uvm_out)
 }
 
@@ -48,8 +49,10 @@ mvm_count <- function(con_nam, log_nam, tnam, rt_esc){
   fc <- CountCoxph(on_nam, log_nam, tnam, rt_esc)
   tt <- summary(fc)
   mvm_out <- data.frame(cbind(tt$coefficients, tt$conf.int), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
-  colnames(mvm_out) <- c("coef", "exp_coef", "lower_95%CI", "upper_95%CI", "pvalue")
-  
+  colnames(mvm_out) <- c("coef", "HR", "lower_95%CI", "upper_95%CI", "pvalue")
+  mvm_out <-data.frame(cbind(row.names(mvm_out), mvm_out))
+  colnames(mvm_out)[1] <- 'variable'  
+
   pdf(file = paste(tnam, "_cox.pdf",  sep = ""), width = 10, height = 10)
   par(cex = 3)
   plot.bh(fc, threshold = 0.05, show.all.vars = T, col.pts = c("red", "black"), gap = 0, show.pvalues = TRUE,
