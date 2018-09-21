@@ -68,3 +68,11 @@ TCGAExpSurM <- function(rt_exp, rt_sur){
   }
 }
 
+MergeCliOth <- function(rt_cli, rt_other){
+  sam_int <- intersect(rt_cli$sample_id, row.names(rt_other))
+  rt_cli_m <- rt_cli[match(sam_int, rt_cli$sample_id, nomatch = 0), ]
+  rt_other_m <- rt_other[match(sam_int, row.names(rt_other), nomatch = 0), ]
+  rt_other_cli <- data.frame(cbind(rt_other_m, rt_cli_m), stringsAsFactors = FALSE)
+  return(rt_other_cli)
+}
+

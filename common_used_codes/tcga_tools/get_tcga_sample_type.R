@@ -55,3 +55,18 @@ split_tcga_tn <-function(rt_tcga, sam_type = c("tumor", "normal"), split_type = 
     stop("you must set sam_type to point which type samples you want to get")
   }
 }
+
+####convert tcga samples to samples id and T/N group
+GetSam <- function(mat_exp, ncol = 4, col_A = 'red', col_B = 'blue'){
+  samples_id <- colnames(mat_exp)
+
+  cancer_type <- matrix(unlist(strsplit(samples_id, '[.]')), ncol = ncol, byrow = TRUE)[, 4]
+  cancer_type <- gsub("1..", "Normal", cancer_type)
+  cancer_type <- gsub("0..", "Tumor", cancer_type)
+  color_type <- gsub('Tumor', col_A, cancer_type)
+  color_type <- gsub('Normal', col_B, color_type)
+  rt_sam <- data.frame(cbind(samples_id, cancer_type, color_type), stringsAsFactors = FALSE)
+  colnames(rt_sam) <- c('samples_id', 'group', 'color')
+  return(rt_sam)
+  
+}

@@ -7,7 +7,8 @@ LogRankUcoxSigGs <- function(mat_exp_sur, data_id, DatType= c('ConType', 'LogTyp
   uvm_list <- lapply(unam, uvm_count, mat_exp_sur)
   data_uvm <- do.call(rbind, uvm_list)
   data_uvm <- na.omit(data_uvm)
-  sig_GS <-  row.names(data_uvm)[data_uvm$pvalue < 0.05]
+  sig_GS <-  data_uvm$variable[data_uvm$pvalue < 0.05]
+  print(length(sig_GS))
   rt_uvm_sig <- mat_exp_sur[, match(sig_GS, colnames(mat_exp_sur), nomatch = 0)]
   
   ###do survival analysis
@@ -15,7 +16,8 @@ LogRankUcoxSigGs <- function(mat_exp_sur, data_id, DatType= c('ConType', 'LogTyp
   sur_plist <- lapply(gnam_log, SurMainFun, mat_exp_sur, DatType = DatType, feature = "OS", OutType = "SurP", SurvType = 'ALL')
   data_sur <- do.call(rbind, sur_plist)
   sig_GS_m <- data_sur[, 1][which(as.numeric(data_sur[, 2]) < 0.05 )]
-  data_uvm_logRank_sig <- data_uvm[sig_GS_m, ]
-  write.table(data_uvm_logRank_sig, file = paste(data_id, '_uvm_logRank_sig.txt', sep = ''), row.names = TRUE, col.names = TRUE, sep = '\t')
+  data_uvm_logRank_sig <- data_uvm[match(sig_GS_m, data_uvm[, 1], nomatch = 0), ]
+  
+  write.table(data_uvm_logRank_sig, file = paste(data_id, '_uvm_logRank_sig.txt', sep = ''), row.names = FALSE, col.names = TRUE, sep = '\t')
   return(sig_GS_m)
 }

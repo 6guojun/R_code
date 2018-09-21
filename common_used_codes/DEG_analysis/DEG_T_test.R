@@ -26,7 +26,7 @@
 ###### main function #############################
 
 print("your data must be concert to log format")
-DEGTest <- function(GP1, GP2, rt, rt_sam, FC, var.equal = var.equal, paired = FALSE, meas = c("DEGPvalFC", "DEGExp", "AllPvalFC")){
+DEGTest <- function(GP1, GP2, rt, rt_sam, FC, var.equal = var.equal, paired = FALSE, meas = c("output", "input")){
   #you can get one table which contain information of pvalue and fold change
   #you can aslo get one expression table of DEG 
   #you can choice achive two table as above
@@ -97,19 +97,19 @@ DEGTest <- function(GP1, GP2, rt, rt_sam, FC, var.equal = var.equal, paired = FA
   ALL_Pval_FC <- MainTest(GP1, GP2, rt, rt_sam, var.equal = var.equal, paired = FALSE)
   DEG_Pval_FC <- ALL_Pval_FC[which(ALL_Pval_FC$Padj < 0.05 & abs(ALL_Pval_FC$log2FC) > FC), ]
   data_G1_G2 <- DrawMat(GP1, GP2, rt, rt_sam)
-  DEG_Table <- data_G1_G2[row.names(DEG_Pval_FC), ]
-  if (meas == ""|is.null(meas) == TRUE|all(meas == c("DEGPvalFC", "DEGExp", "AllPvalFC")) == TRUE){
+  DEG_mat <- data_G1_G2[row.names(DEG_Pval_FC), ]
+  DEG_list <- list(ALL_Pval_FC, DEG_Pval_FC, DEG_mat)
+  if (meas == "output"){
     write.table(DEG_Pval_FC, file = paste(GP1, "_", GP2, "_DEG_", "Pval", "_", "FC", ".txt", sep = ""), sep = "\t")
-    write.table(DEG_Table, file = paste(GP1, "_", GP2, "_DEG_", "_Exp_", ".txt", sep = ""), sep = "\t") 
+    write.table(DEG_mat, file = paste(GP1, "_", GP2, "_DEG_", "_Exp_", ".txt", sep = ""), sep = "\t") 
     write.table(ALL_Pval_FC, file = paste(GP1, "_", GP2, "_ALL", "_Pval_", "FC", ".txt", sep = ""), sep = "\t")
-  } else if (meas == "DEGPvalFC"){
-    return(DEG_Pval_FC)
-  } else if (meas == "DEGExp"){
-    return(DEG_Table)
-  } else if (meas == "AllPvalFC") {
-    return(ALL_Pval_FC)
+  } else if (meas == "input"){
+    return(DEG_list)
   } else {
-    print("if you write parameter, meas must be PvalFC or DEGExp")
+    write.table(DEG_Pval_FC, file = paste(GP1, "_", GP2, "_DEG_", "Pval", "_", "FC", ".txt", sep = ""), sep = "\t")
+    write.table(DEG_mat, file = paste(GP1, "_", GP2, "_DEG_", "_Exp_", ".txt", sep = ""), sep = "\t") 
+    write.table(ALL_Pval_FC, file = paste(GP1, "_", GP2, "_ALL", "_Pval_", "FC", ".txt", sep = ""), sep = "\t")
+    return(DEG_list)
   }
 }
 ##############################################

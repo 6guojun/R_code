@@ -71,8 +71,8 @@ CliSort <- function(rt_cli, cancer){
     rt_esc$recurrence <- factor(rt_esc$recurrence, labels = c(3, 2, 1))#  NO YES
   }
   if(cancer == "KIRC"){
-    rt_esc <-  rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic","pathologic_T", "pathologic_N", "pathologic_M", "tumor_stage.diagnoses")]
-    colnames(rt_esc) <- c("sample_id", "age", "gender", "T", "N", "M", "stage")
+    rt_esc <-  rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic","pathologic_T", "pathologic_N", "pathologic_M", "tumor_stage.diagnoses", "new_tumor_event_after_initial_treatment")]
+    colnames(rt_esc) <- c("sample_id", "age", "gender", "T", "N", "M", "stage", "recurrence")
     
     ###convert clinical element to numeric
     rt_esc$gender <- factor(rt_esc$gender, labels=c(1, 2))
@@ -80,6 +80,7 @@ CliSort <- function(rt_cli, cancer){
     rt_esc$N <- factor(rt_esc$N, labels=c(1, 2, 3))
     rt_esc$M <- factor(rt_esc$M, labels=c(3, 1, 2, 3))
     rt_esc$stage <- factor(rt_esc$stage, labels = c(3, 1, 1, 2, 2))
+    rt_esc$recurrence <- factor(rt_esc$recurrence, labels = c(3, 2, 1))
   }
   if(cancer == "LAML"){
     rt_esc <- rt_cli[, c("submitter_id.samples", "age_at_diagnosis.diagnoses", "gender.demographic", "lab_procedure_hemoglobin_result_specified_value",
@@ -168,19 +169,6 @@ CliSort <- function(rt_cli, cancer){
     ###convert clinical element to numeric
     rt_esc$gender <- factor(rt_esc$gender, labels=c(1, 2)) #female male
     rt_esc$tumor_depth <- factor(rt_cli_m$tumor_depth, labels=c(3, 2, 1))#'' Deep Superficial
-    rt_esc$recurrence <- factor(rt_esc$recurrence, labels=c(3, 2, 1)) #'' NO YES
-  }
-  if(cancer == "KIRC"){
-    rt_esc <- rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic","pathologic_T", 
-                         "pathologic_N", "pathologic_M", "tumor_stage.diagnoses", 'new_tumor_event_after_initial_treatment')]
-    colnames(rt_esc) <- c("sample_id", "age", "gender", "T", "N", "M", "stage", 'recurrence')
-    
-    ###convert clinical element to numeric
-    rt_esc$gender <- factor(rt_esc$gender, labels=c(1, 2)) #female male
-    rt_esc$T <- factor(rt_esc$T, labels=c(5, rep(1, 2), rep(2, 3), rep(3, 4), 4)) #'' T1 T1a T1b T2 T2a T2b T3 T3a T3b T3c T4
-    rt_esc$N <- factor(rt_esc$N, labels=c(1, 2, 3)) # N0 N1 NX
-    rt_esc$M <- factor(rt_esc$M, labels=c(3, 1, 2, 3)) #'' M0 M1 MX
-    rt_esc$stage <- factor(rt_esc$stage, labels=c(3, rep(1, 2), rep(2, 2))) # not reported stage i stage ii stage iii stage iv
     rt_esc$recurrence <- factor(rt_esc$recurrence, labels=c(3, 2, 1)) #'' NO YES
   }
   rt_esc_c <- data.frame(apply(rt_esc, 2, as.character), stringsAsFactors = FALSE)
