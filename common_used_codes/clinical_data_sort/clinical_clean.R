@@ -1,3 +1,5 @@
+source('/Users/stead/Documents/SourceTree/R/common_used_codes/clinical_data_sort/GetTsamC.R')
+
 CliClean <- function(rt_cli, cancer){
   if(cancer == "LUAD"){
     rt_cli_T <- GetTumorS(rt_cli)
@@ -7,7 +9,7 @@ CliClean <- function(rt_cli, cancer){
     
     ###convert clinical element to numeric
     rt_esc$gender[which(rt_esc$gender == "")] <- 'NA'
-    rt_esc$race[which(rt_esc$race == "")] <- "not reported" 
+    rt_esc$race[which(rt_esc$race == "")] <- "NA" 
     rt_esc$recurrence[which(rt_esc$recurrence == "")] <- "NA"
     rt_esc$T[grep("T1", rt_esc$T)] <- "T1"
     rt_esc$T[grep("T2", rt_esc$T)] <- "T2"
@@ -15,15 +17,20 @@ CliClean <- function(rt_cli, cancer){
     rt_esc$T[grep("T4", rt_esc$T)] <- "T4"
     rt_esc$T[which(rt_esc$T == "")] <- "TX"
     rt_esc$N[which(rt_esc$N == "")] <- "NX"
+    rt_esc$N[c(which(rt_esc$N == "N1"), which(rt_esc$N == "N2"), which(rt_esc$N == "N3"))] <- "N1-3"
     rt_esc$M[which(rt_esc$M == "")] <- 'MX'
-    rt_esc$stage[grep("stage iv", rt_esc$stage)] <- "stage IV"
-    rt_esc$stage[grep("stage iii", rt_esc$stage)] <- "stage III"
-    rt_esc$stage[grep("stage ii", rt_esc$stage)] <- "stage II"
-    rt_esc$stage[grep("stage i", rt_esc$stage)] <- "stage I"
-    rt_esc$stage[which(rt_esc$stage == "")] <- 'stage X'
+    rt_esc$M[grep('M1', rt_esc$M)] <- 'M1'
+    rt_esc$stage[grep("stage iv", rt_esc$stage)] <- "IV"
+    rt_esc$stage[grep("stage iii", rt_esc$stage)] <- "III"
+    rt_esc$stage[grep("stage ii", rt_esc$stage)] <- "II"
+    rt_esc$stage[grep("stage i", rt_esc$stage)] <- "I"
+    rt_esc$stage[which(rt_esc$stage == "")] <- 'NA'
+    rt_esc$stage[which(rt_esc$stage == "not reported")] <- 'NA'
   }
   rt_esc_c <- data.frame(apply(rt_esc, 2, as.character), stringsAsFactors = FALSE)
   colnames(rt_esc_c) <- colnames(rt_esc)
   write.table(rt_esc_c, file = paste(cancer, "_cli.txt", sep = ""), sep = "\t", col.names = TRUE, row.names = FALSE)
   return(rt_esc_c)
 }
+
+

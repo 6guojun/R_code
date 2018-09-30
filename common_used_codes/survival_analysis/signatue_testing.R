@@ -8,6 +8,7 @@
 script_dir <- '/Users/stead/Documents/SourceTree/R/common_used_codes/' 
 source(paste(script_dir, 'tcga_tools/time_ROC.R', sep = ""))
 source(paste(script_dir, 'smart_tools/signature_com_heatmap.R', sep = ""))
+source(paste(script_dir, 'survival_analysis/survival_analysis.R', sep = ""))
 
 SignatureTest <- function(mat_testing_sur = mat_testing_sur, risk_genes = risk_genes, coef_value = coef_value, dataset_id = dataset_id){
   #

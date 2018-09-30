@@ -46,6 +46,8 @@ MakBoxPlot <- function(gnam, gggroup, rt_box_mat, width = 4, height = 6, theme_V
    #group contain all kinds of types such as tumor or normal, female or male, cancer type and so on. 
    #the column of gnam contain all group expression value or other value
    #rt_box must have two columns which contain gnam and group. But, it can also contian samples_id and so no.
+  gnam <<- gnam
+  gggroup <<- gggroup
   rt_box <- rt_box_mat[, c(gnam, gggroup)]
   rt_box[, gnam] <- as.numeric(rt_box[, gnam])
   colnames(rt_box) <- c(gnam, "group")
@@ -68,7 +70,7 @@ MakBoxPlot <- function(gnam, gggroup, rt_box_mat, width = 4, height = 6, theme_V
   
   ###do boxplot
   if(ggtype == "boxplot"){
-    pdf(file = paste(gnam, "_boxplot_point.pdf", sep = ""), width = width, height = height)
+    pdf(file = paste(gnam, '_', gggroup,"_boxplot_point.pdf", sep = ""), width = width, height = height)
     p <- ggplot(rt_box, aes(x = group, y = rt_box[, gnam], fill = group)) + geom_boxplot() + 
       scale_fill_manual(values= ggcolor) + annotate("text", x = 1.5, y = max(rt_box[, gnam]), label= paste("P = ", Pval, sep = "")) +  
       geom_jitter(shape=16, position = position_jitter(0.2)) +  labs(title = gnam) + xlab(gggroup) + ylab(ggylab) +
@@ -77,19 +79,21 @@ MakBoxPlot <- function(gnam, gggroup, rt_box_mat, width = 4, height = 6, theme_V
     dev.off()
     
     #no point 
-    pdf(file = paste(gnam, "_boxplot.pdf", sep = ""), width = width, height = height)
+    pdf(file = paste(gnam, '_', gggroup, "_boxplot.pdf", sep = ""), width = width, height = height)
     p <- ggplot(rt_box, aes(x = group, y = rt_box[, gnam], fill = group)) + geom_boxplot() + 
       scale_fill_manual(values= ggcolor) + annotate("text", x = 1.5, y = max(rt_box[, gnam]), label= paste("P = ", Pval, sep = ""))  +
       labs(title = gnam) + xlab(gggroup) + ylab(ggylab) + theme_VB
     print(p)
     dev.off()
+    rm(gnam, gggroup, pos = ".GlobalEnv")
   } else if (ggtype == "violin"){
-    pdf(file = paste(gnam, "_violin.pdf", sep = ""), width = width, height = width)
+    pdf(file = paste(gnam, '_', gggroup, "_violin.pdf", sep = ""), width = width, height = width)
     p <- ggplot(rt_box, aes(x = group, y = rt_box[, gnam])) +  geom_violin(aes(fill = group), trim = FALSE) + geom_boxplot(width = 0.1) + 
       scale_fill_manual(values = ggcolor)+ annotate("text", x = 1.5, y = max(rt_box[, gnam]), label= paste("P = ", Pval, sep = "")) +
       labs(title = gnam)  + xlab(gggroup) + ylab(ggylab) + theme_VB
     print(p)
     dev.off()
+    rm(gnam, gggroup, pos = ".GlobalEnv")
   } else {
     stop('you must set ggtype')
   }

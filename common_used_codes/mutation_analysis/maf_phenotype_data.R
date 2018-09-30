@@ -2,12 +2,12 @@
 
 library(dplyr)
 
-ContMafCli <- function(mut_mat, exp_phe_mat){
+ContMafCli <- function(mut_mat, exp_phe_mat, phe_nam){
   mut_mat_mat <- matrix(unlist(strsplit(as.character(mut_mat$Tumor_Sample_Barcode), '-')), ncol = 7, byrow = TRUE)
   mut_mat_cli <- data.frame(cbind(paste(mut_mat_mat[, 1], mut_mat_mat[, 2], mut_mat_mat[, 3], sep = "-"), as.character(mut_mat$Tumor_Sample_Barcode)), stringsAsFactors = FALSE)
-  pur_phe_mat <- data.frame(cbind(row.names(exp_phe_mat), exp_phe_mat[, c( "OS_Time", "OS_Status", "risk_score")]), stringsAsFactors = FALSE)
-  pur_phe_mat$risk_score[pur_phe_mat$risk_score > median(pur_phe_mat$risk_score)] <- 'high_risk'
-  pur_phe_mat$risk_score[pur_phe_mat$risk_score != 'high_risk'] <- 'low_risk'
+  pur_phe_mat <- data.frame(cbind(row.names(exp_phe_mat), exp_phe_mat[, c( "OS_Time", "OS_Status", phe_nam)]), stringsAsFactors = FALSE)
+  pur_phe_mat$risk_score[pur_phe_mat[, phe_nam] > median(pur_phe_mat[, phe_nam])] <- 'high_risk'
+  pur_phe_mat$risk_score[pur_phe_mat[, phe_nam] <= median(pur_phe_mat[, phe_nam])] <- 'low_risk'
   
   colnames(mut_mat_cli)[1] <- 'Tumor_Sample_Barcode'
   colnames(pur_phe_mat)[1] <- 'Tumor_Sample_Barcode'
@@ -23,7 +23,7 @@ ContMafCli <- function(mut_mat, exp_phe_mat){
 #maf_val = read.maf(maf = "/Users/stead/Desktop/PD-L1_and_TMI_type/UCSC_GDC_data/KIRP/somatic_mut/TCGA.KIRP.mutect.1ab98b62-5863-4440-84f9-3c15d476d523.DR-10.0.somatic.maf", 
 #                   clinicalData = mut_cli_phe)
 
-CountMutPhe <- function(maf_val, maf_phe, clinicalFeatures = clinicalFeatures, gene_list){
+CountMutPhe <- function(maf_val, maf_phe, clinicalFeatures = clinicalFeatures, gene_list, ggcolor = ggcolor, theme_mut){
   MutPheMat <- data.frame(left_join(left_join(left_join(maf_val@variants.per.sample, maf_val@variant.type.summary, by = 'Tumor_Sample_Barcode'), 
                                               maf_val@variant.classification.summary, by = 'Tumor_Sample_Barcode'),  maf_val@clinical.data, by = 'Tumor_Sample_Barcode'),
                           stringsAsFactors = FALSE)
@@ -33,8 +33,10 @@ CountMutPhe <- function(maf_val, maf_phe, clinicalFeatures = clinicalFeatures, g
   
   for(mnam in mut_sta){
     rt_mut_box <- MutPheMat[, c(mnam, 'risk_score')]
+    rt_mut_box <- rt_mut_box[c(which(rt_mut_box$risk_score == "high_risk"), which(rt_mut_box$risk_score == "low_risk")), ]
+    
     colnames(rt_mut_box) <- c(mnam, 'group')
-    MakBoxPlot(mnam, 'group', rt_mut_box, width = 4, height = 6, theme_E, ggtype = 'boxplot', ggcolor = c('red', 'blue'), ggylab = mnam)
+    MakBoxPlot(mnam, 'group', rt_mut_box, width = 6, height = 6, theme_mut, ggtype = 'violin', ggcolor = ggcolor, ggylab = 'mutations')
   }
   
   pdf(file = 'mutation_dis_phe.pdf', 10, 10)
@@ -47,7 +49,7 @@ CountMutPhe <- function(maf_val, maf_phe, clinicalFeatures = clinicalFeatures, g
   print(sig_genes_ht)
   dev.off()
   
-  sig_gene_mut <- maf_val@gene.summary$Hugo_Symbol[1:20]
+  sig_gene_mut <- maf_val@gene.summary$Hugo_Symbol[1:40]
   
   for(gnam in sig_gene_mut){
     pdf(file = paste(gnam, '_mut_sur.pdf', sep = ""))

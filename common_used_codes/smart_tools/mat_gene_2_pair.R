@@ -113,7 +113,7 @@ GetGS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c
     
     ###GEO dataset###
   } else if (dataset_id == 'GEO') {
-    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
+    rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat_log.txt', sep = '')
                          , sep = '\t', header = TRUE, row.names = 1, stringsAsFactors = FALSE)
     rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
                          header = TRUE, sep = '\t', stringsAsFactors = FALSE)
