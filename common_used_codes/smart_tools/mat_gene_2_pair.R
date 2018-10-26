@@ -20,6 +20,7 @@ Exp2GPS <- function(mat_exp, rm_cons = c('yes', 'no')){
   num_i <- 1: length(gene_comb_p[, 1])
   mat_pair_list <- lapply(num_i, GetPairMat, mat_exp, gene_comb_p)
   mat_pair <- do.call(rbind, mat_pair_list) 
+  print(dim(mat_pair))
   if(rm_cons == 'yes'){
     ###sort data
     mat_pair_d <- mat_pair[!apply(mat_pair, 1, function(x){all(x > 0)| all(x < 0) | all(x = 0)}), ]
@@ -34,16 +35,27 @@ Exp2GPS <- function(mat_exp, rm_cons = c('yes', 'no')){
 }
 
 ###get gene pair matrix with survival data
-PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c('TCGA', "GEO"), rm_cons = c('yes', 'no'), tar_genes = tar_genes, GSE_ID = GSE_ID, 
+PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, sur_type = c('OS', 'DFS'),  dataset_id = c('TCGA', "GEO"), rm_cons = c('yes', 'no'), tar_genes = tar_genes, GSE_ID = GSE_ID, 
                    in_type = in_type, out_type = out_type, dup_type = dup_type) {
   ###TCGA dataset
   if(dataset_id == 'TCGA'){
     rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/RNA_seq/TCGA-', cancer_type, '.htseq_fpkm.tsv', sep = ''), header = TRUE, 
                          row.names = 1, sep = '\t', stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, "/phenotype/TCGA-", cancer_type, ".survival.tsv", sep = ""), header = TRUE,
-                         sep = "\t", row.names = NULL, stringsAsFactors = FALSE)
+    rt_exp <- data.frame(rt_exp[apply(rt_exp, 1, function(x){median(x) > 0}), ], stringsAsFactors = FALSE)
+    if(sur_type == 'OS'){
+      rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, "/phenotype/OS_data.txt", sep = ""), header = TRUE,
+                           sep = "\t", row.names = NULL, stringsAsFactors = FALSE)
+    } else if(sur_type == 'DFS'){
+      rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, "/phenotype/DFS_data.txt", sep = ""), header = TRUE,
+                           sep = "\t", row.names = NULL, stringsAsFactors = FALSE)
+    }
     
-    rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)  #conver ensemble id to gene name
+    if(in_type == out_type){
+      rt_exp_sym <- rt_exp
+    } else {
+      rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)  #conver ensemble id to gene name
+    }
+    
     rt_exp_int <- rt_exp_sym[match(tar_genes, row.names(rt_exp_sym), nomatch = 0), ] #get target genes expression table
     
     #convert expressino table to gene pairs table
@@ -58,17 +70,38 @@ PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = 
     mat_pair_m <- exp_sur_list[[1]]
     mat_sur_m <- exp_sur_list[[2]]
     pair_nam <- row.names(mat_pair_m)
-    mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("X_OS_IND", "X_OS")]), stringsAsFactors = FALSE)
-    colnames(mat_pair_sur) <- c(pair_nam, "OS_Status", "OS_Time")
-    return(mat_pair_sur)
     
+    if(sur_type == 'OS'){
+      mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("OS_Status", "OS_Time")]), stringsAsFactors = FALSE)
+      colnames(mat_pair_sur) <- c(pair_nam, "OS_Status", "OS_Time")
+      return(mat_pair_sur)
+    } else if(sur_type == 'DFS'){
+      mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("DFS_Status", "DFS_Time")]), stringsAsFactors = FALSE)
+      colnames(mat_pair_sur) <- c(pair_nam, "DFS_Status", "DFS_Time")
+      return(mat_pair_sur)
+    }
+ 
     ###GEO dataset###
   } else if (dataset_id == 'GEO') {
     rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = '')
                          , sep = '\t', header = TRUE, row.names = 1, stringsAsFactors = FALSE)
-    rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 
-                         header = TRUE, sep = '\t', stringsAsFactors = FALSE)
-    rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)   #conver ensemble id to gene name
+    rt_exp <- data.frame(rt_exp[apply(rt_exp, 1, function(x){median(x) > 0}), ], stringsAsFactors = FALSE)
+    
+    if(sur_type == 'OS'){
+      rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/phenotype_data/OS_data.txt', sep = ''), 
+                           header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+      
+    } else if (sur_type == 'DFS'){
+      rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/phenotype_data/DFS_data.txt', sep = ''), 
+                           header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+    }
+
+    if(in_type == out_type){
+      rt_exp_sym <- rt_exp
+    } else {
+      rt_exp_sym <- EA2SM(rt_exp, in_type = in_type, out_type = out_type, dup_type = dup_type)  #conver ensemble id to gene name
+    }
+    
     rt_exp_int <- rt_exp_sym[match(tar_genes, row.names(rt_exp_sym), nomatch = 0), ] #get target genes expression table
     #convert expressino table to gene pairs table
     if(rm_cons == 'yes'){
@@ -76,19 +109,26 @@ PreGPS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = 
     } else if (rm_cons == 'no'){
       mat_pair <- Exp2GPS(rt_exp_int, rm_cons = 'no')
     }
+    
     exp_sur_list <- GEOExpCliM(mat_pair, rt_sur)
     mat_pair_m <- exp_sur_list[[1]]
     mat_sur_m <- exp_sur_list[[2]]
     pair_nam <- row.names(mat_pair_m)
-    mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("OS_Status", "OS_Time")]), stringsAsFactors = FALSE)
-    colnames(mat_pair_sur) <- c(pair_nam, "OS_Status", "OS_Time")
-    return(mat_pair_sur)
-    
+    if(sur_type == 'OS'){
+      mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("OS_Status", "OS_Time")]), stringsAsFactors = FALSE)
+      colnames(mat_pair_sur) <- c(pair_nam, "OS_Status", "OS_Time")
+      return(mat_pair_sur)
+    } else if(sur_type == 'DFS'){
+      mat_pair_sur <- data.frame(cbind(t(mat_pair_m), mat_sur_m[, c("DFS_Status", "DFS_Time")]), stringsAsFactors = FALSE)
+      colnames(mat_pair_sur) <- c(pair_nam, "DFS_Status", "DFS_Time")
+      return(mat_pair_sur)
+    }
   } else {
     stop('dataset_id should contain TCGA or GSE' )
   }
 }
 
+###get gene expression matrix with survival data
 GetGS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c('TCGA', "GEO"), tar_genes = tar_genes, GSE_ID = GSE_ID, 
                    in_type = in_type, out_type = out_type, dup_type = dup_type) {
   ###TCGA dataset
@@ -113,6 +153,7 @@ GetGS <- function(data_dir = data_dir, cancer_type = cancer_type, dataset_id = c
     
     ###GEO dataset###
   } else if (dataset_id == 'GEO') {
+    print(paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat.txt', sep = ''))
     rt_exp <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/expression_data/', GSE_ID, '_mat_log.txt', sep = '')
                          , sep = '\t', header = TRUE, row.names = 1, stringsAsFactors = FALSE)
     rt_sur <- read.table(file = paste(data_dir, '/', cancer_type, '/', GSE_ID, '/survival_data/survival_data.txt', sep = ''), 

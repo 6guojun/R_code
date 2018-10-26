@@ -83,7 +83,7 @@ MafToolSum <- function(maf_val, phe_type = c('subtype', 'all'), sub1 = NULL, sub
   Peroncoplot <- function(maf_per, P_nam = P_nam, gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor){
     pdf(paste("oncoplot_", P_nam, ".pdf", sep = ""))
     oncoplot(maf = maf_per, top = 20, fontSize = 12, clinicalFeatures = clinicalFeatures, genes = gene_list, 
-             annotationColor = annotationColor)
+             annotationColor = annotationColor, sortByAnnotation = TRUE)
     dev.off()
   }
   
@@ -130,26 +130,26 @@ MafToolSum <- function(maf_val, phe_type = c('subtype', 'all'), sub1 = NULL, sub
   PerCoOncoplot <- function(maf_cancer_sub1, maf_cancer_sub2, sub1, sub2, gene_list = gene_list, clinicalFeatures = clinicalFeatures, 
                             annotationColor = annotationColor){
     pdf(paste("CoOncoplot_", sub1, "_", sub2, ".pdf", sep = ""), 10, 6)
-    coOncoplot(m1 = maf_cancer_sub1, m2 = maf_cancer_sub2, m1Name = sub1, m2Name = sub2, genes = gene_list, removeNonMutated = TRUE)
+    coOncoplot(m1 = maf_cancer_sub1, m2 = maf_cancer_sub2, m1Name = sub1, m2Name = sub2, genes = gene_list, removeNonMutated = FALSE)
     dev.off()
   }
   
   if(phe_type == 'subtype'){
-    tsb_sub1 <- maf_val@clinical.data$Tumor_Sample_Barcode[which(maf_val@clinical.data$subtype == sub1)]
-    tsb_sub2 <- maf_val@clinical.data$Tumor_Sample_Barcode[which(maf_val@clinical.data$subtype == sub2)]
+    tsb_sub1 <- maf_val@clinical.data$Tumor_Sample_Barcode[which(data.frame(maf_val@clinical.data, stringsAsFactors = FALSE)[, clinicalFeatures] == sub1)]
+    tsb_sub2 <- maf_val@clinical.data$Tumor_Sample_Barcode[which(data.frame(maf_val@clinical.data, stringsAsFactors = FALSE)[, clinicalFeatures] == sub2)]
     
     maf_cancer_sub1 <- subsetMaf(maf_val, tsb = tsb_sub1, restrictTo = "all", mafObj = TRUE)
     maf_cancer_sub2 <- subsetMaf(maf_val, tsb = tsb_sub2, restrictTo = "all", mafObj = TRUE)
     
     for(maf_per in c(maf_val, maf_cancer_sub1, maf_cancer_sub2)){
       P_nam = dim(maf_per@variants.per.sample)[1]
-        PermafSum(maf_per, P_nam = P_nam)
-        Peroncoplot(maf_per, P_nam = P_nam, gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
-        Peroncostrip(maf_per, P_nam = P_nam, gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
-        PerTiTv(maf_per, P_nam = P_nam)
-        PerVaf(maf_per, P_nam = P_nam, gene_list = gene_list)
-        PerInteraction(maf_per, P_nam = P_nam, gene_list = gene_list)
-        lapply(gene_sur, PerSur, maf_per, P_nam = P_nam, col = col_sur)
+      PermafSum(maf_per, P_nam = P_nam)
+      Peroncoplot(maf_per, P_nam = P_nam, gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
+      Peroncostrip(maf_per, P_nam = P_nam, gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
+      PerTiTv(maf_per, P_nam = P_nam)
+      PerVaf(maf_per, P_nam = P_nam, gene_list = gene_list)
+      PerInteraction(maf_per, P_nam = P_nam, gene_list = gene_list)
+      lapply(gene_sur, PerSur, maf_per, P_nam = P_nam, col = col_sur)
     }
     
     PerForest(maf_cancer_sub1, maf_cancer_sub2, sub1, sub2)
@@ -161,9 +161,9 @@ MafToolSum <- function(maf_val, phe_type = c('subtype', 'all'), sub1 = NULL, sub
     Peroncoplot(maf_val, P_nam = 'ALL', gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
     Peroncostrip(maf_val, P_nam = 'ALL', gene_list = gene_list, clinicalFeatures = clinicalFeatures, annotationColor = annotationColor)
     PerTiTv(maf_val, P_nam = 'ALL')
-    PerVaf(maf_val, P_nam = 'ALL', gene_list = gene_list)
-    PerInteraction(maf_val,  P_nam = 'ALL', gene_list = gene_list)
-    lapply(gene_sur, PerSur, maf_per, P_nam = 'ALL', col = col_sur)
+    #PerVaf(maf_val, P_nam = 'ALL', gene_list = gene_list)
+    #PerInteraction(maf_val,  P_nam = 'ALL', gene_list = gene_list)
+    #lapply(gene_sur, PerSur, maf_per, P_nam = 'ALL', col = col_sur)
   } else {
   print('you must set phe_type')
   }

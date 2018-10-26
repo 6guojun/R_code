@@ -80,7 +80,7 @@ DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), th
   names(fit$strata) <- gsub("Rt_Exp_Cli., Gnam]=", "", names(fit$strata))
   
   if(is.null(fun)){
-  pdf(file = paste(Gnam, ".pdf", sep = ""), 11, 10, onefile = FALSE)
+  pdf(file = paste(Gnam, ".pdf", sep = ""), 11, 11, onefile = FALSE)
    dt <- ggsurvplot(fit, title = Gnam, pval = paste('P = ', format(pValueR, digits = 4, scientific = TRUE), sep = ""), 
                     conf.int = FALSE, pval.size = 10, pval.coord = c(1, 0), xlab = "Time in days", 
                     size = 2, #change line size
@@ -92,7 +92,7 @@ DrawSurminer <- function(Gnam, Rt_Exp_Cli, DatType = c("ConType", "LogType"), th
    dev.off()
    
  } else {
- pdf(file = paste(Gnam, ".pdf", sep = ""), 11, 10, onefile = FALSE)
+ pdf(file = paste(Gnam, ".pdf", sep = ""), 11, 11, onefile = FALSE)
   dt <- ggsurvplot(fit,  title = Gnam, pval = paste('P = ', format(pValueR, digits = 4, scientific = TRUE), sep = ""), 
                    conf.int = FALSE, pval.size = 10, pval.coord = c(1, 1), xlab = "Time in days", 
                     size = 2, #change line size

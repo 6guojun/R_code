@@ -1,5 +1,5 @@
 ##the function you can get the best cox model which is the most frequency 
-##usage:  x_coef_value_list <- GLCoxMain(k, x, y, width, height, theme_coef)
+##usage:  x_coef_value_list <- GLCoxMain(k, x, y, s = "lambda.min/lambda.1se", family = "cox/binomial", width, height, theme_coef)
 ##x is the expression table, the row.names is samples id and colname is the gene id
 ##y id the survival data which contain time and status
 ##k is the frequency times that you want to train in the model
@@ -14,8 +14,8 @@ library(ggplot2)
 library(glmnet)
 library(survival)
 
-GLCoxMain <- function(k, x, y, width, height){
-  ScreenKeyGS <- function(k){
+GLCoxMain <- function(k, x, y, alpha = 1, s = "lambda.min", family = family, width, height){
+  ScreenKeyGS <- function(k, family = family){
     #x is the expression table, the row.names is samples id and colname is the gene id
     #y id the survival data which contain time and status
     #k is the frequency times that you want to train in the model
@@ -24,10 +24,24 @@ GLCoxMain <- function(k, x, y, width, height){
     #x_coef is expression matrix contained active covariates in the model 
     #risk_genes with the active covariates
     #coef_value_d is the coeffecient value of the risk genes
+    if(family == "cox"){
+      fit = glmnet(x, y, family = "cox", alpha = alpha)
+      cvfit = cv.glmnet(x, y, family = "cox", alpha = alpha)
+    } else if (family == "binomial"){
+      fit = glmnet(x, y, family = "binomial", alpha = alpha)
+      cvfit = cv.glmnet(x, y, family = "binomial", alpha = alpha)
+    }
     
-    cvfit = cv.glmnet(x, y, family = "cox")
-    coef_min = coef(cvfit, s = "lambda.min")
-    x_coef <- x[, which(coef_min[, 1] != 0)]
+    pdf(file = 'coef_L1.pdf', 10, 9)
+    plot(fit, label = TRUE)
+    dev.off()
+    
+    pdf(file = 'dev_lab.pdf', 10, 9)
+    plot(cvfit)
+    dev.off()
+    
+    coef_min = coef(cvfit, s = s)
+    x_coef <- x[, which(coef_min[which(row.names(coef_min) != "(Intercept)"), 1] != 0)]
     risk_genes <- colnames(x_coef)
     coef_value_d <- coef_min[which(coef_min[, 1] != 0)]
     risk_genes_lam <- paste(risk_genes, collapse = ";")
@@ -44,7 +58,7 @@ GLCoxMain <- function(k, x, y, width, height){
     return(GS_out)
   }
   
-  coef_list <- sapply(1: k, ScreenKeyGS)
+  coef_list <- sapply(1: k, ScreenKeyGS, family = family)
   risk_genes_list <- coef_list[seq(1, by = 3, length = k)]
   risk_gens_vec <- do.call(rbind, risk_genes_list)
   UG_list <- unique(risk_genes_list)

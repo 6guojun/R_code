@@ -2,30 +2,12 @@
 ###usage: PerSubMain(rt_miRNA_d, rt_sur_m, method_sub = 'hc', rank_sub = 4, data_type = 'miRNA', nrun = 4, seed = 1262118388.71279,  distance = 'pearson')
 library(scatterplot3d)
 library(plot3D)
+library(diceR)
 
 source('/Users/stead/Documents/SourceTree/R/common_used_codes/survival_analysis/survival_miner.R')
 source('/Users/stead/Documents/SourceTree/R/common_used_codes/survival_analysis/ggsurv_theme/ggsurv_theme_A.R')
 source('/Users/stead/Documents/SourceTree/R/common_used_codes/cluster_figure/scatt_3d_PCA.R')
-
-#do heatmap
-SubHeat <- function(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_type){
-  
-  print('group_sub and the expression mat must have the same samples names')
-  ha1 = HeatmapAnnotation(group_sub = group_sub, 
-                          col = list(group_sub= structure(names = unique(group_sub), color_type[1:length(unique(group_sub))])))
-  pdf(file = paste(data_type, method_sub, num_k, 'ht.pdf', sep = '_'), 10, 8)
-  ht_list <- Heatmap(rt_sub_ord, name = "center scaled expression",
-                     col = colorRamp2(c(min(rt_sub_ord)/3 , (min(rt_sub_ord) + max(rt_sub_ord))/3, max(rt_sub_ord)/2), c(" blue", "white", "red")),
-                     top_annotation = ha1, top_annotation_height = unit(0.5, "cm"), 
-                     cluster_columns = FALSE, column_dend_reorder = FALSE, 
-                     cluster_rows = TRUE, row_dend_reorder = FALSE, 
-                     show_row_dend = TRUE, show_column_dend = FALSE,
-                     show_row_names = FALSE, show_column_names = FALSE, row_names_side = "right") 
-  draw(ht_list, annotation_legend_side = "right", heatmap_legend_side = "right")
-  dev.off()
-  
-  print('heatmap finished')
-}
+source('/Users/stead/Documents/SourceTree/R/common_used_codes/cluster_figure/Com_Heatmap.R')
 
 ###survival analysis
 SubSurv <- function(group_sub, rt_sub_ord, rt_sur_m, data_type, method_sub, num_k, color_type){
@@ -50,20 +32,24 @@ SubPCA <- function(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_ty
   sub_color <- as.character(factor(group_sub, labels = color_type[1:length(unique(group_sub))]))
   
   rt_sam <- data.frame(cbind(names(group_sub), group_sub, sub_color))
-  colnames(rt_sam) <-  c('samples', 'group', 'color')
+  colnames(rt_sam) <-  c('samples_id', 'group', 'color')
   MakPCA(rt_pca, rt_sam = rt_sam, target_genes, nam = nam, phi = 40, pch = 18, len_a = len_a, len_b = len_b,
          len_position = 'bottom', width = NULL, height = NULL)
 }
 
 
 PerSubMain <- function(num_k, rt_sub, rt_sur_m, method_sub = method_sub, rank_sub = rank_sub, data_type = data_type, nrun = 10, seed = 1262118388.71279, 
-                       distance = 'pearson'){
+                       distance = 'pearson', color_type = color_type){
   
   mat_sub <- as.matrix(rt_sub)
   
   if(method_sub %in% c('hc', 'km', 'kmdist', 'pam')){
     res_sub = ConsensusClusterPlus(mat_sub, maxK = rank_sub, reps = 100, pItem = 0.8, pFeature = 1, title = paste(data_type, method_sub, sep = '_'),
                                    clusterAlg = method_sub, distance = distance, seed = seed, plot = "pdf")
+    consensus_mat <-  res_sub[[num_k]]$consensusMatrix
+    pac_value <-  PAC(consensus_mat, lower = 0, upper = 1)
+    pac_res <-c(paste(num_k, method_sub, sep = '_'), pac_value)
+    
     print('subtype finished')
     
     sub_type <- as.data.frame(res_sub[[num_k]]['consensusClass'])
@@ -74,14 +60,16 @@ PerSubMain <- function(num_k, rt_sub, rt_sur_m, method_sub = method_sub, rank_su
     
     group_sub <- sub_type_ord  
     #do heatmap
-    SubHeat(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_type)
+    SubHeat(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_type, 
+            cluster_columns = FALSE, show_column_dend = FALSE,  column_dend_reorder = FALSE, show_column_names = FALSE, 
+            cluster_rows = TRUE, show_row_dend = TRUE, row_dend_reorder = TRUE, show_row_names = FALSE)
     
     #do survival
     SubSurv(group_sub, rt_sub_ord, rt_sur_m, data_type, method_sub, num_k, color_type)
     
     #do pca
-    SubPCA(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_type)
-    return(group_sub)
+    SubPCA(group_sub, rt_sub, data_type, method_sub, num_k, color_type)
+    return(list(group_sub, pac_res))
     
   } else if (method_sub == 'NMF'){
     sub_er <- nmf(mat_sub, 2:rank_sub, nrun = nrun, seed = seed)
@@ -108,7 +96,9 @@ PerSubMain <- function(num_k, rt_sub, rt_sur_m, method_sub = method_sub, rank_su
     group_sub <- sub_type_ord
     
     #do heatmap
-    SubHeat(group_sub, rt_sub_ord, data_type, method_sub, i, color_type)
+    SubHeat(group_sub, rt_sub_ord, data_type, method_sub, num_k, color_type, 
+            cluster_columns = FALSE, show_column_dend = FALSE,  column_dend_reorder = FALSE, show_column_names = FALSE, 
+            cluster_rows = TRUE, show_row_dend = TRUE, row_dend_reorder = TRUE, show_row_names = FALSE)
     
     #do survival
     SubSurv(group_sub, rt_sub_ord, rt_sur_m, data_type, method_sub, i, color_type)

@@ -1,3 +1,5 @@
+library(GEOquery)
+
 gse81089 <- getGEO('GSE81089', GSEMatrix = TRUE)
 rt_cli_e81089 <- pData(phenoData(gse81089[[1]]))
 rt_cli_e81089_S <- rt_cli_e81089[, c("age:ch1", "dead:ch1", "gender:ch1", "stage tnm:ch1", "surgery date:ch1",  "histology:ch1", "tumor (t) or normal (n):ch1", "vital date:ch1")]
@@ -78,4 +80,35 @@ GSE33356_cli <- pData(phenoData(GSE18842[[1]]))
 GSE28571 <- getGEO('GSE28571', GSEMatrix = TRUE)
 GSE28571_cli <- pData(phenoData(GSE28571[[1]]))
 
+GSE77803 <- getGEO('GSE77803', GSEMatrix = TRUE)
+GSE77803_cli <- pData(phenoData(GSE77803[[1]]))
 
+GSE63074 <- getGEO('GSE63074', GSEMatrix = TRUE)
+GSE63074_cli <- pData(phenoData(GSE63074[[1]]))
+
+GSE5843 <- getGEO('GSE5843', GSEMatrix = TRUE)
+GSE5843_cli <- pData(phenoData(GSE5843[[1]]))
+
+GSE7339 <- getGEO('GSE7339', GSEMatrix = TRUE)
+GSE7339_cli <- pData(phenoData(GSE7339[[1]]))
+
+GSE120622 <- getGEO('GSE120622', GSEMatrix = TRUE)
+GSE120622_cli <- pData(phenoData(GSE120622[[1]]))
+GSE120622_cli_2 <- pData(phenoData(GSE120622[[2]]))
+write.table(GSE120622_cli_2, file = 'clinical_data_raw.txt', row.names = TRUE, col.names = TRUE, sep = '\t')
+
+GSE10245 <- getGEO('GSE10245', GSEMatrix = TRUE)
+GSE10245_cli <- pData(phenoData(GSE10245[[1]]))
+GSE10245_cli_2 <- pData(phenoData(GSE10245[[2]]))
+
+GSE1037 <- getGEO('GSE1037', GSEMatrix = TRUE)
+GSE1037_cli <- pData(phenoData(GSE1037[[1]]))
+GSE1037_cli_2 <- pData(phenoData(GSE1037[[2]]))
+
+GSE5123 <- getGEO('GSE5123', GSEMatrix = TRUE)
+GSE5123_cli <- pData(phenoData(GSE5123[[1]]))
+GSE5123_cli_2 <- pData(phenoData(GSE5123[[2]]))
+
+GSE4573 <- getGEO('GSE4573', GSEMatrix = TRUE)
+GSE4573_cli <- pData(phenoData(GSE4573[[1]]))
+GSE4573_cli_2 <- pData(phenoData(GSE4573[[2]]))

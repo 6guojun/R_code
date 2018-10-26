@@ -2,10 +2,15 @@ library(survival)
 library(BhGLM)
 library(glmnet)
 
-uvm_count <- function(unam, rt_uvm){
+uvm_count <- function(unam, rt_uvm, feature = c('OS', 'DFS')){
   #rt_uvm contain OS_Time, OS_Status and other element 
+  if(feature == 'OS'){
   t <- rt_uvm[, "OS_Time"]
   d <- rt_uvm[, "OS_Status"]
+  } else if (feature == 'DFS'){
+  t <- rt_uvm[, "DFS_Time"]
+  d <- rt_uvm[, "DFS_Status"]
+  }
   y <- Surv(t, d)
   
   if(is.numeric(rt_uvm[, unam])){
@@ -25,7 +30,7 @@ uvm_count <- function(unam, rt_uvm){
   
   fc = coxph(y ~ ., data = xc)
   tt <- summary(fc)
-  uvm_out <- data.frame(cbind(round(tt$coefficients, digits = 4),  round(tt$conf.int, digits = 4)), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
+  uvm_out <- data.frame(cbind(round(tt$coefficients, digits = 3),  round(tt$conf.int, digits = 3)), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
   colnames(uvm_out) <- c("coef", "exp_coef", "lower_95%CI", "upper_95%CI", "pvalue")
   uvm_out <- data.frame(cbind(unam, uvm_out), stringsAsFactors = FALSE)
   colnames(uvm_out)[1] <- 'variable'
@@ -65,20 +70,19 @@ mvm_count <- function(con_nam, log_nam, tnam, rt_esc){
   
   fc <- CountCoxph(on_nam, log_nam, tnam, rt_esc)
   tt <- summary(fc)
-  mvm_out <- data.frame(cbind(round(tt$coefficients, digits = 4), round(tt$conf.int, digits = 4)), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
+  mvm_out <- data.frame(cbind(round(tt$coefficients, digits = 3), round(tt$conf.int, digits = 3)), stringsAsFactors = FALSE)[, c("coef", "exp.coef.", "lower..95", "upper..95", "Pr...z.." )]
   colnames(mvm_out) <- c("coef", "HR", "lower_95%CI", "upper_95%CI", "pvalue")
   mvm_out <-data.frame(cbind(row.names(mvm_out), mvm_out), stringsAsFactors = FALSE)
   colnames(mvm_out)[1] <- 'variable'  
+  return(mvm_out)
   if(all(!is.na(fc$coefficients))){
     pdf(file = paste(tnam, "_cox.pdf",  sep = ""), width = 10, height = 10)
     par(cex = 3)
     plot.bh(fc, threshold = 0.05, show.all.vars = T, col.pts = c("red", "black"), gap = 0, show.pvalues = TRUE,
             cex.var= 2, cex.pts = 0.5, OR = T, lwd = 4)
     dev.off()
-    return(mvm_out)
   } else {
     print('the results of some elements is na')
-    return(mvm_out)
   }
   
 }

@@ -59,16 +59,18 @@ CliSort <- function(rt_cli, cancer){
     rt_esc$stage <- factor(rt_esc$stage, labels=c(3, 1, 1, 2, 2, 2, 2))
   }
   if(cancer == "KIRP"){
-    rt_esc <- rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic","pathologic_T", "pathologic_N", "pathologic_M", "tumor_stage.diagnoses", "new_tumor_event_after_initial_treatment")]
-    colnames(rt_esc) <- c("sample_id", "age", "gender", "T", "N", "M", "stage", "recurrence")
+    rt_esc <- rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic", "tumor_type", "pathologic_T", "pathologic_N", "pathologic_M", "tumor_stage.diagnoses", "new_tumor_event_after_initial_treatment", "additional_therapy")]
+    colnames(rt_esc) <- c("sample_id", "age", "gender","tumor_type", "T", "N", "M", "stage", "recurrence", "additional_therapy")
     
     ###convert clinical element to numeric
     rt_esc$gender <- factor(rt_esc$gender, labels=c(1, 2))# female male
+    rt_esc$tumor_type <- factor(rt_esc$tumor_type, labels=c(3, 1, 2))# "" Type 1 Type 2
     rt_esc$T <- factor(rt_esc$T, labels=c(1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 5))# T1 T1a T1b T2 T2a T2b T3 T3a T3b T3c T4 TX
     rt_esc$N <- factor(rt_esc$N, labels=c(3, 1, 2, 2, 3))#"" N0 N1 N2 NX
     rt_esc$M <- factor(rt_esc$M, labels=c(3, 1, 2, 3))#"" M0 M1 MX
     rt_esc$stage <- factor(rt_esc$stage, labels = c(3, 1, 1, 2, 2))# not reported stage i stage ii stage iii stage iv
     rt_esc$recurrence <- factor(rt_esc$recurrence, labels = c(3, 2, 1))#  NO YES
+    rt_esc$additional_therapy <- factor(rt_esc$additional_therapy, labels=c(2, 1)) #"NO" "YES"
   }
   if(cancer == "KIRC"){
     rt_esc <-  rt_cli[, c("submitter_id.samples", "age_at_initial_pathologic_diagnosis", "gender.demographic","pathologic_T", "pathologic_N", "pathologic_M", "tumor_stage.diagnoses", "new_tumor_event_after_initial_treatment")]

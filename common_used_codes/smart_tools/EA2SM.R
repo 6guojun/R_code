@@ -29,21 +29,27 @@ DupAver <- function(gnam, rt_sym_dup, dup_type = c('mean', 'max')){
 Dup2UiqMat <- function(rt_sym, dup_type = c('mean', 'max')){
   #get unique genes and duplicated genes
   dup_genes <-  unique(rt_sym$gene_id[duplicated(rt_sym$gene_id)])
-  dup_pos_list <- lapply(dup_genes, function(x){grep(x, rt_sym$gene_id)})
-  dup_pos <- unlist(dup_pos_list)
-  rt_sym_u <-  rt_sym[-dup_pos, -1]
-  row.names(rt_sym_u) <- rt_sym$gene_id[-dup_pos]
-  rt_sym_dup <- rt_sym[dup_pos, ]
   
-  #get unique expression table of rt_sym_dup
-  gnam <- as.character(unique(rt_sym_dup$gene_id))
-  rt_sym_dup_u_list <- lapply(gnam, DupAver, rt_sym_dup, dup_type = dup_type)
-  rt_sym_dup_u <- do.call(rbind, rt_sym_dup_u_list)
-  row.names(rt_sym_dup_u) <- gnam
-  
-  #combine rt_sym_u and rt_sym_dup_u
-  rt_m <- data.frame(rbind(rt_sym_u, rt_sym_dup_u), stringsAsFactors = FALSE)
-  return(rt_m)
+  if(length(dup_genes) == 0){
+    rt_m <- rt_sym[, -1]
+    return(rt_m)
+    
+  } else if (length(dup_genes) > 0){
+    dup_pos_list <- lapply(dup_genes, function(x){which(x == rt_sym$gene_id)})
+    dup_pos <- unlist(dup_pos_list)
+    rt_sym_u <-  rt_sym[-dup_pos, -1]
+    row.names(rt_sym_u) <- rt_sym$gene_id[-dup_pos]
+    rt_sym_dup <- rt_sym[dup_pos, ]
+    #get unique expression table of rt_sym_dup
+    gnam <- as.character(unique(rt_sym_dup$gene_id))
+    rt_sym_dup_u_list <- lapply(gnam, DupAver, rt_sym_dup, dup_type = dup_type)
+    rt_sym_dup_u <- do.call(rbind, rt_sym_dup_u_list)
+    row.names(rt_sym_dup_u) <- gnam
+    
+    #combine rt_sym_u and rt_sym_dup_u
+    rt_m <- data.frame(rbind(rt_sym_u, rt_sym_dup_u), stringsAsFactors = FALSE)
+    return(rt_m)
+  }
 }
 
 EA2SM <- function(rt_exp, in_type = in_type, out_type = out_type, dup_type = c('mean', 'max')){
